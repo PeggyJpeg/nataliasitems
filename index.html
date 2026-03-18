@@ -42,7 +42,7 @@
 
     /* ── FILTER TABS ─────────────────────────────────────────── */
     .tab-btn {
-      padding: 8px 18px;
+      padding: 8px 20px;
       border-radius: 9999px;
       font-size: 14px;
       font-weight: 700;
@@ -52,11 +52,9 @@
       min-height: 36px;
       font-family: inherit;
     }
-    .tab-btn.active {
-      background: white;
-      color: var(--hk-red);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    }
+    #tab-all.active  { background: white; color: var(--hk-mid); box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+    #tab-home.active { background: #10b981; color: white; box-shadow: 0 2px 6px rgba(16,185,129,0.4); }
+    #tab-out.active  { background: #f59e0b; color: white; box-shadow: 0 2px 6px rgba(245,158,11,0.4); }
     .tab-btn:not(.active) {
       background: rgba(255,255,255,0.2);
       color: white;
@@ -139,9 +137,9 @@
     /* ── STATUS PILLS ────────────────────────────────────────── */
     .pill-in {
       display: inline-block;
-      background: linear-gradient(to right, #ffe4ee, #fff0f5);
-      color: var(--hk-red);
-      border: 1.5px solid var(--hk-pink);
+      background: linear-gradient(to right, #d1fae5, #ecfdf5);
+      color: #065f46;
+      border: 1.5px solid #6ee7b7;
       border-radius: 9999px;
       padding: 2px 10px;
       font-size: 12px;
@@ -149,9 +147,9 @@
     }
     .pill-out {
       display: inline-block;
-      background: linear-gradient(to right, #fff0ea, #fff5f0);
-      color: #c05000;
-      border: 1.5px solid #ffb380;
+      background: linear-gradient(to right, #fff7ed, #fffbeb);
+      color: #92400e;
+      border: 1.5px solid #fcd34d;
       border-radius: 9999px;
       padding: 2px 10px;
       font-size: 12px;
@@ -160,7 +158,7 @@
 
     /* ── ACTION BUTTONS ──────────────────────────────────────── */
     .btn-checkout {
-      background: linear-gradient(to right, #ff85be, #ff5fa8);
+      background: linear-gradient(to right, #f59e0b, #d97706);
       color: white;
       border: none;
       border-radius: 8px;
@@ -177,7 +175,7 @@
     .btn-checkout:active { opacity: 0.8; }
 
     .btn-home {
-      background: linear-gradient(to right, var(--hk-red), var(--hk-mid));
+      background: linear-gradient(to right, #10b981, #059669);
       color: white;
       border: none;
       border-radius: 8px;
@@ -380,8 +378,8 @@
 
     /* ── COUNTER BADGES ──────────────────────────────────────── */
     .counter-home {
-      background: rgba(255,255,255,0.25);
-      border: 1.5px solid rgba(255,255,255,0.5);
+      background: rgba(16,185,129,0.25);
+      border: 1.5px solid rgba(16,185,129,0.6);
       color: white;
       border-radius: 9999px;
       padding: 2px 10px;
@@ -389,9 +387,9 @@
       font-weight: 700;
     }
     .counter-out {
-      background: rgba(255,255,255,0.15);
-      border: 1.5px solid rgba(255,255,255,0.35);
-      color: rgba(255,255,255,0.85);
+      background: rgba(245,158,11,0.25);
+      border: 1.5px solid rgba(245,158,11,0.6);
+      color: white;
       border-radius: 9999px;
       padding: 2px 10px;
       font-size: 13px;
@@ -495,11 +493,11 @@
       cursor: pointer; min-height: 44px;
     }
     .btn-status-toggle.is-in {
-      background: linear-gradient(to right, var(--hk-lpink), #ffd6e3);
-      color: var(--hk-red);
+      background: linear-gradient(to right, #d1fae5, #a7f3d0);
+      color: #065f46;
     }
     .btn-status-toggle.is-out {
-      background: linear-gradient(to right, var(--hk-red), #e0509a);
+      background: linear-gradient(to right, #f59e0b, #d97706);
       color: white;
     }
     .btn-delete-item {
@@ -569,8 +567,8 @@
     </div>
 
     <!-- Filter tabs -->
-    <div style="display:flex; gap:8px; margin-bottom:10px; margin-top:6px;">
-      <button class="tab-btn active" id="tab-all"  onclick="setTab('all')">All</button>
+    <div style="display:flex; gap:8px; margin-bottom:10px; margin-top:6px; justify-content:center;">
+      <button class="tab-btn active" id="tab-all"  onclick="setTab('all')">✨ All</button>
       <button class="tab-btn"        id="tab-home" onclick="setTab('home')">🏠 Home</button>
       <button class="tab-btn"        id="tab-out"  onclick="setTab('out')">📦 Out</button>
     </div>
