@@ -202,6 +202,41 @@
     .btn-joke    { background: linear-gradient(to right, #a855f7, #c084fc); color: white; }
     .btn-fact    { background: linear-gradient(to right, #8b5cf6, #7c3aed); color: white; }
 
+    /* Welcome message */
+    #welcome-message {
+      background: linear-gradient(135deg, #fff0f8, #fdf4ff);
+      border: 1.5px solid #f9a8d4;
+      border-radius: 14px;
+      padding: 14px 40px 14px 16px;
+      font-size: 15px;
+      color: #be185d;
+      font-style: italic;
+      font-weight: 600;
+      box-shadow: 0 3px 12px rgba(236,72,153,0.15);
+      margin: 12px 24px 0;
+      position: relative;
+      opacity: 1;
+      transition: opacity 0.8s ease;
+    }
+    #welcome-message.fading { opacity: 0; }
+    #welcome-message.hidden { display: none; }
+    #welcome-close {
+      position: absolute;
+      top: 9px;
+      right: 10px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      color: #f9a8d4;
+      line-height: 1;
+      padding: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #welcome-close:hover { color: #ec4899; }
+
     /* Toast/fun message */
     #fun-message {
       background: white;
@@ -483,6 +518,12 @@
   </style>
 </head>
 <body>
+
+<!-- WELCOME MESSAGE -->
+<div id="welcome-message">
+  <button id="welcome-close" onclick="dismissWelcome()" title="Dismiss">✕</button>
+  <span id="welcome-text"></span>
+</div>
 
 <!-- STICKY HEADER -->
 <div id="site-header">
@@ -911,8 +952,50 @@ function deleteDetailItem() {
   closeDetail();
 }
 
+// ─── WELCOME MESSAGE ────────────────────────────────────────────────────────
+const WELCOME_MESSAGES = [
+  "Hi Natalia 🌸 You're literally the prettiest person who has ever tracked their clothes.",
+  "Welcome back, babe 💜 Somehow even your laundry list is cute.",
+  "Hey gorgeous 🌷 Missing any items? (Spoiler: not your personality, it's perfect.)",
+  "Hi Natalia ✨ Just a reminder that you're absolutely radiant today.",
+  "Welcome back 💕 You make keeping track of clothes look effortlessly chic.",
+  "Hey you 🌺 The fact that you made an app for this? That's main character energy.",
+  "Hi Natalia 💖 Your closet is lucky to have you. Tbh so is everyone around you.",
+  "Welcome, queen 👑 Hope your day is as lovely as you are.",
+  "Hey Natalia 🌸 Checking in on your items? You're so organized it's almost unfair.",
+  "Hi beautiful 💜 Your fit today? Probably immaculate. As always.",
+  "Welcome back 🌷 Reminder: you're the most stylish person this app has ever seen.",
+  "Hey Natalia ✨ You walk into rooms and literally improve the vibe. Just so you know.",
+  "Hi 💕 Not to be dramatic, but this app is better just because you're using it.",
+  "Welcome back, superstar 🌟 Your style, your warmth, your everything — unmatched.",
+  "Hey Natalia 🩷 Just popping in to say you're seriously one of a kind.",
+];
+
+let welcomeTimer = null;
+
+function showWelcome() {
+  const el = document.getElementById('welcome-message');
+  const txt = document.getElementById('welcome-text');
+  const idx = Math.floor(Math.random() * WELCOME_MESSAGES.length);
+  txt.textContent = WELCOME_MESSAGES[idx];
+  el.classList.remove('hidden', 'fading');
+
+  welcomeTimer = setTimeout(() => {
+    el.classList.add('fading');
+    setTimeout(() => el.classList.add('hidden'), 800);
+  }, 4000);
+}
+
+function dismissWelcome() {
+  clearTimeout(welcomeTimer);
+  const el = document.getElementById('welcome-message');
+  el.classList.add('fading');
+  setTimeout(() => el.classList.add('hidden'), 800);
+}
+
 // ─── INIT ───────────────────────────────────────────────────────────────────
 renderItems();
+showWelcome();
 </script>
 </body>
 </html>
