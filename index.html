@@ -596,8 +596,11 @@
     </div>
     <div class="sheet-body">
       <div class="sheet-photo-actions">
-        <label>📸 Upload Photo
-          <input type="file" id="detail-file-input" accept="image/*" capture="environment" style="display:none;" onchange="handleDetailFileUpload(event)" />
+        <label>📷 Take Photo
+          <input type="file" id="detail-file-camera" accept="image/*" capture="environment" style="display:none;" onchange="handleDetailFileUpload(event)" />
+        </label>
+        <label>🖼️ Choose Photo
+          <input type="file" id="detail-file-input" accept="image/*" style="display:none;" onchange="handleDetailFileUpload(event)" />
         </label>
       </div>
       <label class="modal-label">Name</label>
@@ -870,6 +873,7 @@ function openDetail(id) {
   document.getElementById('detail-name').value = item.name || '';
   document.getElementById('detail-desc').value = item.description || '';
   document.getElementById('detail-file-input').value = '';
+  document.getElementById('detail-file-camera').value = '';
 
   updateDetailPhoto(item.photo);
   updateDetailStatusBtn();
