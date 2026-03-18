@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #fdf2f8 0%, #faf5ff 50%, #ede9fe 100%);
+      min-height: 100vh;
+    }
+
+    /* Sticky header */
+    #site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: linear-gradient(to right, #fbcfe8, #e9d5ff);
+      border-bottom: 2px solid #f9a8d4;
+      box-shadow: 0 2px 8px rgba(236, 72, 153, 0.15);
+    }
+
+    /* Filter tabs */
+    .tab-btn {
+      padding: 8px 18px;
+      border-radius: 9999px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s;
+      min-height: 36px;
+    }
+    .tab-btn.active {
+      background: linear-gradient(to right, #ec4899, #a855f7);
+      color: white;
+      box-shadow: 0 2px 6px rgba(168,85,247,0.4);
+    }
+    .tab-btn:not(.active) {
+      background: white;
+      color: #9333ea;
+      border: 1.5px solid #e879f9;
+    }
+
+    /* Search bar */
+    #search-input {
+      border: 1.5px solid #f0abfc;
+      border-radius: 9999px;
+      padding: 9px 16px 9px 38px;
+      font-size: 14px;
+      outline: none;
+      background: white;
+      color: #4a044e;
+      width: 100%;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    #search-input:focus {
+      border-color: #c026d3;
+      box-shadow: 0 0 0 3px rgba(192,38,211,0.15);
+    }
+    #search-input::placeholder { color: #d8b4fe; }
+
+    /* Item card */
+    .item-card {
+      background: white;
+      border: 1.5px solid #fbcfe8;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(236,72,153,0.08);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      transition: box-shadow 0.15s;
+    }
+    .item-card:active { box-shadow: 0 1px 4px rgba(236,72,153,0.1); }
+
+    .item-thumb {
+      width: 72px;
+      height: 72px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1.5px solid #f9a8d4;
+      flex-shrink: 0;
+      background: #fdf2f8;
+    }
+    .item-thumb-placeholder {
+      width: 72px;
+      height: 72px;
+      border-radius: 10px;
+      border: 1.5px solid #f9a8d4;
+      background: linear-gradient(135deg, #fce7f3, #ede9fe);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 24px;
+    }
+
+    .item-info { flex: 1; min-width: 0; }
+    .item-name {
+      font-weight: 700;
+      font-size: 15px;
+      color: #4a044e;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 4px;
+    }
+
+    /* Status pills */
+    .pill-in {
+      display: inline-block;
+      background: linear-gradient(to right, #fce7f3, #fdf4ff);
+      color: #be185d;
+      border: 1px solid #f9a8d4;
+      border-radius: 9999px;
+      padding: 2px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .pill-out {
+      display: inline-block;
+      background: linear-gradient(to right, #f3e8ff, #ede9fe);
+      color: #7e22ce;
+      border: 1px solid #d8b4fe;
+      border-radius: 9999px;
+      padding: 2px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    /* Action buttons */
+    .btn-checkout {
+      background: linear-gradient(to right, #a855f7, #7c3aed);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      min-height: 44px;
+      white-space: nowrap;
+      transition: opacity 0.15s;
+    }
+    .btn-checkout:active { opacity: 0.8; }
+
+    .btn-home {
+      background: linear-gradient(to right, #ec4899, #db2777);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      min-height: 44px;
+      white-space: nowrap;
+      transition: opacity 0.15s;
+    }
+    .btn-home:active { opacity: 0.8; }
+
+    /* Fun buttons */
+    .fun-btn {
+      flex: 1;
+      padding: 10px 6px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      min-height: 44px;
+      transition: opacity 0.15s;
+    }
+    .fun-btn:active { opacity: 0.8; }
+    .btn-motivate { background: linear-gradient(to right, #ec4899, #f472b6); color: white; }
+    .btn-joke    { background: linear-gradient(to right, #a855f7, #c084fc); color: white; }
+    .btn-fact    { background: linear-gradient(to right, #8b5cf6, #7c3aed); color: white; }
+
+    /* Toast/fun message */
+    #fun-message {
+      background: white;
+      border: 1.5px solid #f9a8d4;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 14px;
+      color: #7e22ce;
+      font-style: italic;
+      box-shadow: 0 2px 8px rgba(236,72,153,0.1);
+      margin-top: 8px;
+      display: none;
+    }
+
+    /* FAB */
+    #fab {
+      position: fixed;
+      bottom: 24px;
+      right: 20px;
+      width: 56px;
+      height: 56px;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, #ec4899, #a855f7);
+      color: white;
+      font-size: 28px;
+      font-weight: 300;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(168,85,247,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      transition: transform 0.15s;
+      line-height: 1;
+    }
+    #fab:active { transform: scale(0.93); }
+
+    /* Modal */
+    #modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(76,5,120,0.35);
+      z-index: 200;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    #modal-overlay.open { display: flex; }
+    #modal-box {
+      background: white;
+      border-radius: 20px 20px 0 0;
+      padding: 24px 20px 36px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 -4px 24px rgba(168,85,247,0.2);
+      border-top: 2px solid #f9a8d4;
+    }
+    #modal-box h2 {
+      font-size: 18px;
+      font-weight: 800;
+      color: #7e22ce;
+      margin-bottom: 16px;
+    }
+    .modal-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #9333ea;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .modal-input {
+      width: 100%;
+      border: 1.5px solid #f0abfc;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 15px;
+      color: #4a044e;
+      outline: none;
+      margin-bottom: 14px;
+      transition: border-color 0.15s;
+    }
+    .modal-input:focus { border-color: #c026d3; }
+    .btn-add-confirm {
+      width: 100%;
+      background: linear-gradient(to right, #ec4899, #a855f7);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      min-height: 44px;
+    }
+    .btn-cancel {
+      width: 100%;
+      background: white;
+      color: #9333ea;
+      border: 1.5px solid #e879f9;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      min-height: 44px;
+    }
+
+    /* Counter badges */
+    .counter-home {
+      background: rgba(255,255,255,0.6);
+      border: 1px solid #f9a8d4;
+      color: #be185d;
+      border-radius: 9999px;
+      padding: 2px 10px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .counter-out {
+      background: rgba(255,255,255,0.6);
+      border: 1px solid #d8b4fe;
+      color: #7e22ce;
+      border-radius: 9999px;
+      padding: 2px 10px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* Empty state */
+    #empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      color: #c084fc;
+      display: none;
+    }
+    #empty-state .emoji { font-size: 48px; margin-bottom: 12px; }
+    #empty-state p { font-size: 15px; font-weight: 600; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #f0abfc; border-radius: 2px; }
+  </style>
+</head>
+<body>
+
+<!-- STICKY HEADER -->
+<div id="site-header">
+  <div style="max-width:640px; margin:0 auto; padding:12px 16px 0;">
+    <!-- Title row -->
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+      <div>
+        <h1 style="font-size:20px; font-weight:900; color:#7e22ce; margin:0; line-height:1.2;">
+          🏠 Natalia's House Items
+        </h1>
+        <div style="display:flex; gap:6px; margin-top:4px; flex-wrap:wrap;">
+          <span class="counter-home" id="counter-home">— home</span>
+          <span class="counter-out" id="counter-out">— out</span>
+        </div>
+      </div>
+      <div style="font-size:28px;">🧺</div>
+    </div>
+
+    <!-- Fun buttons -->
+    <div style="display:flex; gap:6px; margin-bottom:10px;">
+      <button class="fun-btn btn-motivate" onclick="showFun('motivate')">✨ Motivate</button>
+      <button class="fun-btn btn-joke"     onclick="showFun('joke')">😂 Joke</button>
+      <button class="fun-btn btn-fact"     onclick="showFun('fact')">🔮 Fact</button>
+    </div>
+
+    <!-- Fun message -->
+    <div id="fun-message"></div>
+
+    <!-- Filter tabs -->
+    <div style="display:flex; gap:8px; margin-bottom:10px; margin-top:6px;">
+      <button class="tab-btn active" id="tab-all"  onclick="setTab('all')">All</button>
+      <button class="tab-btn"        id="tab-home" onclick="setTab('home')">🏠 Home</button>
+      <button class="tab-btn"        id="tab-out"  onclick="setTab('out')">📦 Out</button>
+    </div>
+
+    <!-- Search -->
+    <div style="position:relative; margin-bottom:12px;">
+      <span style="position:absolute; left:13px; top:50%; transform:translateY(-50%); font-size:15px; color:#c084fc; pointer-events:none;">🔍</span>
+      <input id="search-input" type="search" placeholder="Search items…" oninput="renderItems()" />
+    </div>
+  </div>
+</div>
+
+<!-- ITEM LIST -->
+<div style="max-width:640px; margin:0 auto; padding:12px 16px 96px;">
+  <div id="item-list" style="display:flex; flex-direction:column; gap:10px;"></div>
+  <div id="empty-state">
+    <div class="emoji">🔍</div>
+    <p>No items found</p>
+  </div>
+</div>
+
+<!-- FAB -->
+<button id="fab" onclick="openModal()" title="Add item">+</button>
+
+<!-- ADD ITEM MODAL -->
+<div id="modal-overlay" onclick="closeModalOnBg(event)">
+  <div id="modal-box">
+    <h2>✨ Add New Item</h2>
+    <label class="modal-label">Item name *</label>
+    <input class="modal-input" id="new-name" type="text" placeholder="e.g. Blue dress" />
+    <label class="modal-label">Photo URL (optional)</label>
+    <input class="modal-input" id="new-photo" type="url" placeholder="https://…" />
+    <button class="btn-add-confirm" onclick="addItem()">Add Item</button>
+    <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+  </div>
+</div>
+
+<script>
+// ─── DATA ──────────────────────────────────────────────────────────────────
+const INITIAL_ITEMS = [
+  {id:0,  name:"Black shoes",                status:"IN",  photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771559003508-IMG_5126.jpeg"},
+  {id:1,  name:"Black boots",                status:"OUT", photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771558989425-IMG_5125.jpeg"},
+  {id:2,  name:"Burberry boots",             status:"IN",  photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771558971943-IMG_5124.jpeg"},
+  {id:3,  name:"Pink earrings",              status:"IN",  photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771558955981-IMG_5123.jpeg"},
+  {id:4,  name:"Blue Baggu purse",           status:"IN",  photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771012956123-IMG_5051.jpeg"},
+  {id:5,  name:"Black jacket",               status:"IN",  photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771012799656-IMG_5050.jpeg"},
+  {id:6,  name:"Sweater dress",              status:"IN",  photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771012781647-IMG_5049.jpeg"},
+  {id:7,  name:"Suit jacket",                status:"OUT", photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771012767259-IMG_5048.jpeg"},
+  {id:8,  name:"Calvin Klein bra",           status:"OUT", photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771012752728-IMG_5047.jpeg"},
+  {id:9,  name:"Black dress",                status:"IN",  photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771012738126-IMG_5046.jpeg"},
+  {id:10, name:"Black dress",                status:"IN",  photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771012720079-IMG_5045.jpeg"},
+  {id:11, name:"Black dress",                status:"IN",  photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771012477159-IMG_5044.jpeg"},
+  {id:12, name:"Black undies",               status:"OUT", photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771012459738-IMG_5043.jpeg"},
+  {id:13, name:"Black undies",               status:"IN",  photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771012445259-IMG_5042.jpeg"},
+  {id:14, name:"Black undies",               status:"IN",  photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771012316718-IMG_5041.jpeg"},
+  {id:15, name:"Black mini skirt",           status:"IN",  photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771012305272-IMG_5039.jpeg"},
+  {id:16, name:"White banana republic top",  status:"OUT", photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771012293293-IMG_5038.jpeg"},
+  {id:17, name:"Fanny pack",                 status:"IN",  photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771012279779-IMG_5037.jpeg"},
+  {id:18, name:"Black sports bra",           status:"IN",  photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771012069531-IMG_5036.jpeg"},
+  {id:19, name:"Pink and black dress",       status:"IN",  photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771012052380-IMG_5035.jpeg"},
+  {id:20, name:"Bottle Cousy",               status:"IN",  photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771012037213-IMG_5034.jpeg"},
+  {id:21, name:"Red dress",                  status:"IN",  photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771012016841-IMG_5033.jpeg"},
+  {id:22, name:"Princess Polly black pants", status:"OUT", photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771011843206-IMG_5032.jpeg"},
+  {id:23, name:"Black undies",               status:"IN",  photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771011827302-IMG_5031.jpeg"},
+  {id:24, name:"Grey skirt",                 status:"IN",  photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771011809642-IMG_5030.jpeg"},
+  {id:25, name:"Sexy black undies",          status:"IN",  photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771011786460-IMG_5029.jpeg"},
+  {id:26, name:"Motel black dress",          status:"OUT", photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771011764985-IMG_5028.jpeg"},
+  {id:27, name:"Patagonia shorts",           status:"IN",  photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771011503832-IMG_5027.jpeg"},
+  {id:28, name:"Princess Polly jeans",       status:"IN",  photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771011482150-IMG_5026.jpeg"},
+  {id:29, name:"Innisfree face gel",         status:"IN",  photo:"https://abacusai-apps-97d68980a932fad435edcae6-us-west-2.s3.us-west-2.amazonaws.com/24031/public/uploads/1771011423535-IMG_5025.jpeg"},
+];
+
+const MOTIVATIONS = [
+  "You've got this! 💪 Return those clothes and reclaim your space!",
+  "A tidy house is a tidy mind. You're doing amazing! ✨",
+  "Every item back home is a small victory. Keep going! 🏆",
+  "Organization is self-care. You're killing it! 🌸",
+  "Natalia would be proud of this level of tracking. 👑",
+  "You're basically a logistics professional at this point. 📦",
+  "Less clutter, more peace. You're almost there! 🧘",
+  "Getting those items back = level unlocked. 🎮",
+  "Your future self will thank you for staying organized! 🌟",
+  "One item at a time. You're making it happen! 🔥",
+  "Chaos? Not on your watch. Keep tracking! 🗂️",
+];
+
+const JOKES = [
+  "Why did the dress go to therapy? It had too many issues being checked out. 😂",
+  "My closet told me it needed space. I said 'get in line.' 👗",
+  "Why do socks always disappear? They're in a secret relationship with the dryer. 🧦",
+  "I tried to organize my wardrobe but it was already a fashion crisis. 💀",
+  "Why did the jacket break up with the shirt? It felt suffocated. 🧥",
+  "My fashion sense said 'checked out' and honestly same. 😩",
+  "Why did the shoes refuse to come home? They were sole searching. 👟",
+  "I told my closet a joke. It didn't laugh — it just hanged there. 😅",
+  "What do you call clothes that travel a lot? World-wearers. ✈️",
+  "Why was the bra always tired? It had too much support to give. 🎗️",
+  "My wardrobe has more drama than a reality TV show. 📺",
+];
+
+const FACTS = [
+  "The average person only wears 20% of their wardrobe 80% of the time. 👚",
+  "Fast fashion produces 10% of global carbon emissions each year. 🌍",
+  "The global fashion industry is worth over $2.5 trillion. 💰",
+  "Denim jeans were invented in 1873 by Levi Strauss. 👖",
+  "The little black dress was popularized by Coco Chanel in 1926. 🖤",
+  "A cotton T-shirt requires 2,700 liters of water to produce. 💧",
+  "The zipper was invented in 1913 and took 20 years to become popular. 🤐",
+  "High heels were originally worn by men in the 17th century. 👠",
+  "The average American throws away about 81 pounds of clothing per year. ♻️",
+  "Burberry's iconic plaid pattern was designed in the 1920s. 🧣",
+  "The first fashion magazine, Mercure Galant, launched in France in 1672. 📰",
+];
+
+// ─── STATE ──────────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'ntracker_statuses_v1';
+const ITEMS_KEY   = 'ntracker_items_v1';
+
+function loadState() {
+  // Load custom-added items
+  let items = JSON.parse(JSON.stringify(INITIAL_ITEMS));
+  try {
+    const saved = localStorage.getItem(ITEMS_KEY);
+    if (saved) items = JSON.parse(saved);
+  } catch(e) {}
+
+  // Overlay saved statuses
+  try {
+    const statuses = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    items.forEach(item => {
+      if (statuses[item.id] !== undefined) item.status = statuses[item.id];
+    });
+  } catch(e) {}
+  return items;
+}
+
+function saveState() {
+  const statuses = {};
+  items.forEach(item => { statuses[item.id] = item.status; });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(statuses));
+  localStorage.setItem(ITEMS_KEY, JSON.stringify(items));
+}
+
+let items = loadState();
+let currentTab = 'all';
+let funCycles = {motivate: 0, joke: 0, fact: 0};
+
+// ─── RENDER ─────────────────────────────────────────────────────────────────
+function renderItems() {
+  const query = document.getElementById('search-input').value.toLowerCase().trim();
+  const list  = document.getElementById('item-list');
+  const empty = document.getElementById('empty-state');
+
+  const filtered = items.filter(item => {
+    const matchTab = currentTab === 'all'
+      || (currentTab === 'home' && item.status === 'IN')
+      || (currentTab === 'out'  && item.status === 'OUT');
+    const matchSearch = !query || item.name.toLowerCase().includes(query);
+    return matchTab && matchSearch;
+  });
+
+  if (filtered.length === 0) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+    list.innerHTML = filtered.map(item => itemCard(item)).join('');
+  }
+
+  updateCounters();
+}
+
+function itemCard(item) {
+  const isIn = item.status === 'IN';
+  const pillHtml = isIn
+    ? `<span class="pill-in">🏠 At house</span>`
+    : `<span class="pill-out">📦 Checked out</span>`;
+  const btnHtml = isIn
+    ? `<button class="btn-checkout" onclick="toggleStatus(${item.id})">📦 Check out</button>`
+    : `<button class="btn-home"     onclick="toggleStatus(${item.id})">🏠 Mark home</button>`;
+  const imgHtml = item.photo
+    ? `<img class="item-thumb" src="${escHtml(item.photo)}" alt="${escHtml(item.name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" /><div class="item-thumb-placeholder" style="display:none;">👗</div>`
+    : `<div class="item-thumb-placeholder">👗</div>`;
+
+  return `
+    <div class="item-card">
+      ${imgHtml}
+      <div class="item-info">
+        <div class="item-name">${escHtml(item.name)}</div>
+        ${pillHtml}
+      </div>
+      <div style="flex-shrink:0;">
+        ${btnHtml}
+      </div>
+    </div>
+  `;
+}
+
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function updateCounters() {
+  const home = items.filter(i => i.status === 'IN').length;
+  const out  = items.filter(i => i.status === 'OUT').length;
+  document.getElementById('counter-home').textContent = `${home} home`;
+  document.getElementById('counter-out').textContent  = `${out} out`;
+}
+
+// ─── ACTIONS ────────────────────────────────────────────────────────────────
+function toggleStatus(id) {
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+  item.status = item.status === 'IN' ? 'OUT' : 'IN';
+  saveState();
+  renderItems();
+}
+
+function setTab(tab) {
+  currentTab = tab;
+  ['all','home','out'].forEach(t => {
+    document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+  });
+  renderItems();
+}
+
+function showFun(type) {
+  const lists = {motivate: MOTIVATIONS, joke: JOKES, fact: FACTS};
+  const arr = lists[type];
+  const msg = document.getElementById('fun-message');
+  const idx = funCycles[type] % arr.length;
+  funCycles[type]++;
+  msg.textContent = arr[idx];
+  msg.style.display = 'block';
+}
+
+// ─── MODAL ──────────────────────────────────────────────────────────────────
+function openModal() {
+  document.getElementById('modal-overlay').classList.add('open');
+  document.getElementById('new-name').value  = '';
+  document.getElementById('new-photo').value = '';
+  setTimeout(() => document.getElementById('new-name').focus(), 100);
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+function closeModalOnBg(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+function addItem() {
+  const name  = document.getElementById('new-name').value.trim();
+  const photo = document.getElementById('new-photo').value.trim();
+  if (!name) { document.getElementById('new-name').focus(); return; }
+  const maxId = items.reduce((m, i) => Math.max(m, i.id), -1);
+  items.push({ id: maxId + 1, name, status: 'IN', photo: photo || '' });
+  saveState();
+  closeModal();
+  setTab('all');
+  renderItems();
+}
+
+// ─── INIT ───────────────────────────────────────────────────────────────────
+renderItems();
+</script>
+</body>
+</html>
