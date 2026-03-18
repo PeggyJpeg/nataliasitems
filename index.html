@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tracker</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -76,7 +76,22 @@
       padding: 12px;
       transition: box-shadow 0.15s;
     }
+    .item-card:hover { box-shadow: 0 4px 16px rgba(236,72,153,0.15); }
     .item-card:active { box-shadow: 0 1px 4px rgba(236,72,153,0.1); }
+
+    /* Desktop grid */
+    @media (min-width: 768px) {
+      #item-list {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+    }
+    @media (min-width: 1100px) {
+      #item-list {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
 
     .item-thumb {
       width: 72px;
@@ -177,8 +192,10 @@
       cursor: pointer;
       min-height: 44px;
       transition: opacity 0.15s;
+      max-width: 180px;
     }
-    .fun-btn:active { opacity: 0.8; }
+    .fun-btn:hover { opacity: 0.88; }
+    .fun-btn:active { opacity: 0.75; }
     .btn-motivate { background: linear-gradient(to right, #ec4899, #f472b6); color: white; }
     .btn-joke    { background: linear-gradient(to right, #a855f7, #c084fc); color: white; }
     .btn-fact    { background: linear-gradient(to right, #8b5cf6, #7c3aed); color: white; }
@@ -332,7 +349,7 @@
 
 <!-- STICKY HEADER -->
 <div id="site-header">
-  <div style="max-width:640px; margin:0 auto; padding:12px 16px 0;">
+  <div style="max-width:1200px; margin:0 auto; padding:12px 24px 0;">
     <!-- Title row -->
     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
       <div>
@@ -373,7 +390,7 @@
 </div>
 
 <!-- ITEM LIST -->
-<div style="max-width:640px; margin:0 auto; padding:12px 16px 96px;">
+<div style="max-width:1200px; margin:0 auto; padding:12px 24px 96px;">
   <div id="item-list" style="display:flex; flex-direction:column; gap:10px;"></div>
   <div id="empty-state">
     <div class="emoji">🔍</div>
