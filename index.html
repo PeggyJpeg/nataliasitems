@@ -379,11 +379,15 @@
       margin: 10px auto 4px;
     }
     .sheet-close {
-      position: absolute; top: 10px; right: 14px;
-      background: none; border: none;
-      font-size: 22px; color: #c084fc;
-      cursor: pointer; padding: 4px 8px;
+      position: absolute; top: 12px; right: 14px;
+      background: rgba(0,0,0,0.06); border: none;
+      font-size: 18px; color: #9333ea;
+      cursor: pointer; padding: 0;
       line-height: 1;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10;
     }
     .sheet-photo-wrap {
       width: 100%; max-height: 320px;
@@ -706,7 +710,6 @@ function itemCard(item) {
   const descHtml = item.description ? `<div style="font-size:12px;color:#9ca3af;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;">${escHtml(item.description)}</div>` : '';
   return `
     <div class="item-card" onclick="openDetail(${item.id})" style="cursor:pointer;position:relative;">
-      <button onclick="event.stopPropagation();quickDelete(${item.id})" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.08);border:none;border-radius:50%;width:24px;height:24px;font-size:14px;line-height:24px;text-align:center;color:#9ca3af;cursor:pointer;padding:0;z-index:2;" title="Remove item">✕</button>
       ${imgHtml}
       <div class="item-info">
         <div class="item-name">${escHtml(item.name)}</div>
@@ -790,13 +793,6 @@ function addItem() {
 let detailItemId = null;
 let detailStatus = 'IN';
 let detailPhotoData = '';
-
-function quickDelete(id) {
-  if (!confirm('Remove this item?')) return;
-  items = items.filter(i => i.id !== id);
-  saveState();
-  renderItems();
-}
 
 function openDetail(id) {
   const item = items.find(i => i.id === id);
