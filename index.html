@@ -624,10 +624,19 @@
 <div id="modal-overlay" onclick="closeModalOnBg(event)">
   <div id="modal-box">
     <h2>🎀 Add New Item</h2>
+    <div class="sheet-photo-actions" style="margin-bottom:14px;">
+      <button type="button" onclick="document.getElementById('new-file-input').click()">📸 Upload Photo</button>
+      <input type="file" id="new-file-input" accept="image/*" style="display:none;" onchange="handleNewFileUpload(event)" />
+    </div>
+    <div id="new-photo-preview" style="display:none; margin-bottom:14px; border-radius:10px; overflow:hidden; border:2px solid var(--hk-pink); max-height:180px; display:none; align-items:center; justify-content:center; background:linear-gradient(135deg,var(--hk-lpink),#ffe0ea);">
+      <img id="new-photo-img" src="" alt="" style="width:100%; max-height:180px; object-fit:contain; display:block;" />
+    </div>
     <label class="modal-label">Item name *</label>
     <input class="modal-input" id="new-name" type="text" placeholder="e.g. Blue dress" />
-    <label class="modal-label">Photo URL (optional)</label>
-    <input class="modal-input" id="new-photo" type="url" placeholder="https://…" />
+    <label class="modal-label">Description</label>
+    <textarea class="modal-input" id="new-desc" placeholder="Optional description..." rows="2" style="resize:vertical;font-family:inherit;"></textarea>
+    <label class="modal-label" style="margin-bottom:8px;">Status</label>
+    <button id="new-status-btn" class="btn-status-toggle is-in" onclick="toggleNewStatus()" style="margin-bottom:14px;">🏠 At House — tap to change</button>
     <button class="btn-add-confirm" onclick="addItem()">Add Item</button>
     <button class="btn-cancel" onclick="closeModal()">Cancel</button>
   </div>
@@ -835,10 +844,19 @@ function showFun(type) {
 }
 
 // ─── MODAL ──────────────────────────────────────────────────────────────────
+let newPhotoData = '';
+let newStatus = 'IN';
+
 function openModal() {
   document.getElementById('modal-overlay').classList.add('open');
-  document.getElementById('new-name').value  = '';
-  document.getElementById('new-photo').value = '';
+  document.getElementById('new-name').value = '';
+  document.getElementById('new-desc').value = '';
+  document.getElementById('new-file-input').value = '';
+  newPhotoData = '';
+  newStatus = 'IN';
+  const preview = document.getElementById('new-photo-preview');
+  preview.style.display = 'none';
+  updateNewStatusBtn();
   setTimeout(() => document.getElementById('new-name').focus(), 100);
 }
 
@@ -850,12 +868,42 @@ function closeModalOnBg(e) {
   if (e.target === document.getElementById('modal-overlay')) closeModal();
 }
 
+function handleNewFileUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    newPhotoData = ev.target.result;
+    const img = document.getElementById('new-photo-img');
+    img.src = newPhotoData;
+    const preview = document.getElementById('new-photo-preview');
+    preview.style.display = 'flex';
+  };
+  reader.readAsDataURL(file);
+}
+
+function toggleNewStatus() {
+  newStatus = newStatus === 'IN' ? 'OUT' : 'IN';
+  updateNewStatusBtn();
+}
+
+function updateNewStatusBtn() {
+  const btn = document.getElementById('new-status-btn');
+  if (newStatus === 'IN') {
+    btn.className = 'btn-status-toggle is-in';
+    btn.textContent = '🏠 At House — tap to change';
+  } else {
+    btn.className = 'btn-status-toggle is-out';
+    btn.textContent = '📦 Checked Out — tap to change';
+  }
+}
+
 function addItem() {
-  const name  = document.getElementById('new-name').value.trim();
-  const photo = document.getElementById('new-photo').value.trim();
+  const name = document.getElementById('new-name').value.trim();
+  const desc = document.getElementById('new-desc').value.trim();
   if (!name) { document.getElementById('new-name').focus(); return; }
   const maxId = items.reduce((m, i) => Math.max(m, i.id), -1);
-  items.push({ id: maxId + 1, name, status: 'IN', photo: photo || '' });
+  items.push({ id: maxId + 1, name, description: desc, status: newStatus, photo: newPhotoData || '' });
   saveState();
   closeModal();
   setTab('all');
