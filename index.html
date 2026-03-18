@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tracker</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind removed — all styles are custom CSS -->
   <style>
     * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
     body {
@@ -368,6 +368,7 @@
       border-top: 2px solid #f9a8d4;
       transform: translateY(100%);
       transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+      will-change: transform;
       -webkit-overflow-scrolling: touch;
     }
     #detail-overlay.open #detail-sheet { transform: translateY(0); }
@@ -402,8 +403,7 @@
     .sheet-photo-actions {
       display: flex; gap: 8px; margin-bottom: 10px;
     }
-    .sheet-photo-actions label,
-    .sheet-photo-actions button {
+    .sheet-photo-actions label {
       flex: 1;
       text-align: center;
       background: linear-gradient(135deg, #fdf2f8, #faf5ff);
@@ -529,10 +529,6 @@
         <label>📸 Upload Photo
           <input type="file" id="detail-file-input" accept="image/*" capture="environment" style="display:none;" onchange="handleDetailFileUpload(event)" />
         </label>
-        <button type="button" onclick="togglePhotoUrlInput()">🔗 Photo URL</button>
-      </div>
-      <div id="detail-url-row" style="display:none; margin-bottom:10px;">
-        <input type="url" id="detail-photo-url" class="modal-input" placeholder="https://example.com/photo.jpg" />
       </div>
       <label class="modal-label">Name</label>
       <input type="text" id="detail-name" class="modal-input" placeholder="Item name" />
@@ -709,7 +705,8 @@ function itemCard(item) {
 
   const descHtml = item.description ? `<div style="font-size:12px;color:#9ca3af;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;">${escHtml(item.description)}</div>` : '';
   return `
-    <div class="item-card" onclick="openDetail(${item.id})" style="cursor:pointer;">
+    <div class="item-card" onclick="openDetail(${item.id})" style="cursor:pointer;position:relative;">
+      <button onclick="event.stopPropagation();quickDelete(${item.id})" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.08);border:none;border-radius:50%;width:24px;height:24px;font-size:14px;line-height:24px;text-align:center;color:#9ca3af;cursor:pointer;padding:0;z-index:2;" title="Remove item">✕</button>
       ${imgHtml}
       <div class="item-info">
         <div class="item-name">${escHtml(item.name)}</div>
@@ -794,6 +791,13 @@ let detailItemId = null;
 let detailStatus = 'IN';
 let detailPhotoData = '';
 
+function quickDelete(id) {
+  if (!confirm('Remove this item?')) return;
+  items = items.filter(i => i.id !== id);
+  saveState();
+  renderItems();
+}
+
 function openDetail(id) {
   const item = items.find(i => i.id === id);
   if (!item) return;
@@ -803,8 +807,6 @@ function openDetail(id) {
 
   document.getElementById('detail-name').value = item.name || '';
   document.getElementById('detail-desc').value = item.description || '';
-  document.getElementById('detail-photo-url').value = item.photo || '';
-  document.getElementById('detail-url-row').style.display = 'none';
   document.getElementById('detail-file-input').value = '';
 
   updateDetailPhoto(item.photo);
@@ -852,14 +854,6 @@ function toggleDetailStatus() {
   updateDetailStatusBtn();
 }
 
-function togglePhotoUrlInput() {
-  const row = document.getElementById('detail-url-row');
-  row.style.display = row.style.display === 'none' ? 'block' : 'none';
-  if (row.style.display === 'block') {
-    document.getElementById('detail-photo-url').focus();
-  }
-}
-
 function handleDetailFileUpload(e) {
   const file = e.target.files[0];
   if (!file) return;
@@ -881,12 +875,9 @@ function saveDetail() {
   item.description = document.getElementById('detail-desc').value.trim();
   item.status = detailStatus;
 
-  // Photo priority: uploaded file > URL input > keep existing
+  // Photo: use uploaded file if provided, otherwise keep existing
   if (detailPhotoData) {
     item.photo = detailPhotoData;
-  } else {
-    const urlVal = document.getElementById('detail-photo-url').value.trim();
-    if (urlVal) item.photo = urlVal;
   }
 
   saveState();
