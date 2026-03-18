@@ -485,7 +485,6 @@
       border: none; border-radius: 10px;
       padding: 14px; font-size: 15px; font-weight: 700;
       cursor: pointer; min-height: 44px;
-      margin-bottom: 10px;
     }
     .btn-status-toggle.is-in {
       background: linear-gradient(to right, #f9a8d4, #e9d5ff);
@@ -501,12 +500,11 @@
       color: #e11d48;
       border: 1.5px solid #fda4af;
       border-radius: 10px;
-      padding: 12px;
+      padding: 14px;
       font-size: 15px;
       font-weight: 600;
       cursor: pointer;
       min-height: 44px;
-      margin-bottom: 10px;
     }
     .btn-save-item {
       width: 100%;
@@ -606,7 +604,7 @@
       <input type="text" id="detail-name" class="modal-input" placeholder="Item name" />
       <label class="modal-label">Description</label>
       <textarea id="detail-desc" class="modal-input" placeholder="Optional description..." rows="2" style="resize:vertical;font-family:inherit;"></textarea>
-      <div style="margin-top:12px;">
+      <div style="margin-top:12px; display:flex; flex-direction:column; gap:10px;">
         <button id="detail-status-btn" class="btn-status-toggle is-in" onclick="toggleDetailStatus()">🏠 At House</button>
         <button class="btn-save-item" onclick="saveDetail()">💾 Save Changes</button>
         <button class="btn-delete-item" onclick="deleteDetailItem()">🗑️ Delete Item</button>
