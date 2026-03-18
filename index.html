@@ -8,22 +8,23 @@
     @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
 
     :root {
-      --hk-red:    #e8003d;
-      --hk-pink:   #ffb7c5;
-      --hk-lpink:  #ffe4ee;
+      --hk-red:    #ff6b9d;
+      --hk-pink:   #ffb7d5;
+      --hk-lpink:  #fff0f7;
       --hk-white:  #ffffff;
-      --hk-dark:   #3a0018;
-      --hk-mid:    #c0004a;
+      --hk-dark:   #6b0040;
+      --hk-mid:    #e0509a;
+      --hk-deep:   #c7007a;
     }
 
     * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
 
     body {
       font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: #fff0f5;
+      background-color: #fff5fa;
       background-image:
-        radial-gradient(circle, #ffb7c5 1.5px, transparent 1.5px),
-        radial-gradient(circle, #ffd6e3 1.5px, transparent 1.5px);
+        radial-gradient(circle, #ffd6ea 1.5px, transparent 1.5px),
+        radial-gradient(circle, #ffe8f3 1.5px, transparent 1.5px);
       background-size: 28px 28px;
       background-position: 0 0, 14px 14px;
       min-height: 100vh;
@@ -34,9 +35,9 @@
       position: sticky;
       top: 0;
       z-index: 50;
-      background: linear-gradient(135deg, var(--hk-red) 0%, #c0004a 100%);
-      border-bottom: 3px solid #8b0020;
-      box-shadow: 0 3px 12px rgba(232,0,61,0.35);
+      background: linear-gradient(135deg, #ff8dc7 0%, #ff5fa8 100%);
+      border-bottom: 3px solid #e0509a;
+      box-shadow: 0 3px 12px rgba(255,95,168,0.4);
     }
 
     /* ── FILTER TABS ─────────────────────────────────────────── */
@@ -78,7 +79,7 @@
     }
     #search-input:focus {
       border-color: var(--hk-red);
-      box-shadow: 0 0 0 3px rgba(232,0,61,0.15);
+      box-shadow: 0 0 0 3px rgba(255,95,168,0.15);
     }
     #search-input::placeholder { color: var(--hk-pink); }
 
@@ -88,15 +89,15 @@
       border: 2px solid var(--hk-pink);
       border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 2px 8px rgba(232,0,61,0.08);
+      box-shadow: 0 2px 8px rgba(255,95,168,0.08);
       display: flex;
       align-items: center;
       gap: 12px;
       padding: 12px;
       transition: box-shadow 0.15s, transform 0.1s;
     }
-    .item-card:hover  { box-shadow: 0 4px 16px rgba(232,0,61,0.18); }
-    .item-card:active { transform: scale(0.98); box-shadow: 0 1px 4px rgba(232,0,61,0.1); }
+    .item-card:hover  { box-shadow: 0 4px 16px rgba(255,95,168,0.18); }
+    .item-card:active { transform: scale(0.98); box-shadow: 0 1px 4px rgba(255,95,168,0.1); }
 
     /* Desktop grid */
     @media (min-width: 768px) {
@@ -159,7 +160,7 @@
 
     /* ── ACTION BUTTONS ──────────────────────────────────────── */
     .btn-checkout {
-      background: linear-gradient(to right, #ff6b35, #e8003d);
+      background: linear-gradient(to right, #ff85be, #ff5fa8);
       color: white;
       border: none;
       border-radius: 8px;
@@ -210,7 +211,7 @@
     .fun-btn:active { opacity: 0.75; transform: scale(0.97); }
     .btn-motivate { background: linear-gradient(to right, var(--hk-red), #ff4d7d); color: white; }
     .btn-joke     { background: linear-gradient(to right, #ff4d7d, #ff8fab); color: white; }
-    .btn-fact     { background: linear-gradient(to right, #c0004a, var(--hk-red)); color: white; }
+    .btn-fact     { background: linear-gradient(to right, #e0509a, var(--hk-red)); color: white; }
 
     /* ── WELCOME TOAST ───────────────────────────────────────── */
     #welcome-message {
@@ -229,7 +230,7 @@
       color: var(--hk-red);
       font-style: italic;
       font-weight: 700;
-      box-shadow: 0 6px 24px rgba(232,0,61,0.25);
+      box-shadow: 0 6px 24px rgba(255,95,168,0.25);
       opacity: 1;
       transition: opacity 2s ease;
     }
@@ -265,7 +266,7 @@
       font-weight: 700;
       color: var(--hk-mid);
       font-style: italic;
-      box-shadow: 0 2px 8px rgba(232,0,61,0.1);
+      box-shadow: 0 2px 8px rgba(255,95,168,0.1);
       margin-top: 8px;
       display: none;
       position: relative;
@@ -288,13 +289,13 @@
       bottom: 24px; right: 20px;
       width: 58px; height: 58px;
       border-radius: 9999px;
-      background: linear-gradient(135deg, var(--hk-red), #c0004a);
+      background: linear-gradient(135deg, var(--hk-red), #e0509a);
       color: white;
       font-size: 30px;
       font-weight: 300;
       border: none;
       cursor: pointer;
-      box-shadow: 0 4px 16px rgba(232,0,61,0.5);
+      box-shadow: 0 4px 16px rgba(255,95,168,0.5);
       display: flex; align-items: center; justify-content: center;
       z-index: 100;
       transition: transform 0.15s;
@@ -307,7 +308,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(58,0,24,0.4);
+      background: rgba(107,0,64,0.4);
       z-index: 200;
       align-items: flex-end;
       justify-content: center;
@@ -319,7 +320,7 @@
       padding: 24px 20px 36px;
       width: 100%;
       max-width: 480px;
-      box-shadow: 0 -4px 24px rgba(232,0,61,0.2);
+      box-shadow: 0 -4px 24px rgba(255,95,168,0.2);
       border-top: 3px solid var(--hk-red);
     }
     #modal-box h2 {
@@ -351,7 +352,7 @@
     .modal-input:focus { border-color: var(--hk-red); }
     .btn-add-confirm {
       width: 100%;
-      background: linear-gradient(to right, var(--hk-red), #c0004a);
+      background: linear-gradient(to right, var(--hk-red), #e0509a);
       color: white;
       border: none;
       border-radius: 10px;
@@ -418,7 +419,7 @@
       position: fixed;
       inset: 0;
       z-index: 200;
-      background: rgba(58,0,24,0.4);
+      background: rgba(107,0,64,0.4);
       justify-content: flex-end;
       align-items: flex-end;
       flex-direction: column;
@@ -432,7 +433,7 @@
       margin: 0 auto;
       max-height: 92vh;
       overflow-y: auto;
-      box-shadow: 0 -4px 24px rgba(232,0,61,0.25);
+      box-shadow: 0 -4px 24px rgba(255,95,168,0.25);
       border-top: 3px solid var(--hk-red);
       transform: translateY(100%);
       transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
@@ -448,7 +449,7 @@
     }
     .sheet-close {
       position: absolute; top: 12px; right: 14px;
-      background: rgba(232,0,61,0.08); border: none;
+      background: rgba(255,95,168,0.08); border: none;
       font-size: 18px; color: var(--hk-red);
       cursor: pointer; padding: 0;
       line-height: 1;
@@ -498,7 +499,7 @@
       color: var(--hk-red);
     }
     .btn-status-toggle.is-out {
-      background: linear-gradient(to right, var(--hk-red), #c0004a);
+      background: linear-gradient(to right, var(--hk-red), #e0509a);
       color: white;
     }
     .btn-delete-item {
@@ -516,7 +517,7 @@
     }
     .btn-save-item {
       width: 100%;
-      background: linear-gradient(to right, var(--hk-red), #c0004a);
+      background: linear-gradient(to right, var(--hk-red), #e0509a);
       color: white;
       border: none;
       border-radius: 10px;
@@ -551,29 +552,53 @@
           <span class="counter-out" id="counter-out">— out</span>
         </div>
       </div>
-      <!-- Hello Kitty SVG face -->
-      <svg width="52" height="52" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <!-- Hello Kitty SVG -->
+      <svg width="60" height="60" viewBox="0 0 120 130" xmlns="http://www.w3.org/2000/svg">
+        <!-- Left ear -->
+        <ellipse cx="28" cy="30" rx="18" ry="18" fill="white"/>
+        <!-- Right ear -->
+        <ellipse cx="92" cy="30" rx="18" ry="18" fill="white"/>
         <!-- Head -->
-        <ellipse cx="50" cy="54" rx="38" ry="36" fill="white" stroke="#ffb7c5" stroke-width="2"/>
-        <!-- Ears -->
-        <ellipse cx="20" cy="24" rx="13" ry="13" fill="white" stroke="#ffb7c5" stroke-width="2"/>
-        <ellipse cx="80" cy="24" rx="13" ry="13" fill="white" stroke="#ffb7c5" stroke-width="2"/>
-        <!-- Bow -->
-        <polygon points="56,10 70,4 70,16" fill="#e8003d"/>
-        <polygon points="56,10 70,4 70,16" fill="#e8003d"/>
-        <polygon points="84,10 70,4 70,16" fill="#e8003d"/>
-        <polygon points="84,10 70,16 70,4" fill="#c0004a"/>
-        <circle cx="70" cy="10" r="5" fill="#e8003d"/>
-        <!-- Eyes -->
-        <ellipse cx="38" cy="52" rx="5" ry="6" fill="#3a0018"/>
-        <ellipse cx="62" cy="52" rx="5" ry="6" fill="#3a0018"/>
+        <ellipse cx="60" cy="75" rx="48" ry="48" fill="white"/>
+        <!-- Left ear inner -->
+        <ellipse cx="28" cy="30" rx="10" ry="10" fill="#ffcce0"/>
+        <!-- Right ear inner -->
+        <ellipse cx="92" cy="30" rx="10" ry="10" fill="#ffcce0"/>
+
+        <!-- Bow on right ear — left lobe -->
+        <path d="M88,8 Q80,2 80,12 Q80,20 88,18 Z" fill="#ff5fa8"/>
+        <!-- Bow — right lobe -->
+        <path d="M100,8 Q108,2 108,12 Q108,20 100,18 Z" fill="#ff5fa8"/>
+        <!-- Bow — center knot -->
+        <ellipse cx="94" cy="13" rx="7" ry="6" fill="#ff85be"/>
+        <!-- Bow shine -->
+        <ellipse cx="91" cy="10" rx="2.5" ry="2" fill="rgba(255,255,255,0.55)"/>
+
+        <!-- Left eye -->
+        <ellipse cx="44" cy="72" rx="6" ry="7" fill="#1a1a1a"/>
+        <!-- Left eye shine -->
+        <circle cx="46" cy="69" r="2" fill="white"/>
+        <!-- Right eye -->
+        <ellipse cx="76" cy="72" rx="6" ry="7" fill="#1a1a1a"/>
+        <!-- Right eye shine -->
+        <circle cx="78" cy="69" r="2" fill="white"/>
+
         <!-- Nose -->
-        <ellipse cx="50" cy="62" rx="4" ry="3" fill="#ffb7c5"/>
-        <!-- Whiskers -->
-        <line x1="12" y1="58" x2="40" y2="62" stroke="#ccc" stroke-width="1.5"/>
-        <line x1="12" y1="64" x2="40" y2="64" stroke="#ccc" stroke-width="1.5"/>
-        <line x1="60" y1="62" x2="88" y2="58" stroke="#ccc" stroke-width="1.5"/>
-        <line x1="60" y1="64" x2="88" y2="64" stroke="#ccc" stroke-width="1.5"/>
+        <ellipse cx="60" cy="84" rx="5" ry="4" fill="#ff85be"/>
+
+        <!-- Left cheek blush -->
+        <ellipse cx="34" cy="88" rx="10" ry="6" fill="#ffcce0" opacity="0.7"/>
+        <!-- Right cheek blush -->
+        <ellipse cx="86" cy="88" rx="10" ry="6" fill="#ffcce0" opacity="0.7"/>
+
+        <!-- Whiskers left -->
+        <line x1="8"  y1="80" x2="48" y2="84" stroke="#c8c8c8" stroke-width="1.8" stroke-linecap="round"/>
+        <line x1="8"  y1="88" x2="48" y2="88" stroke="#c8c8c8" stroke-width="1.8" stroke-linecap="round"/>
+        <line x1="8"  y1="96" x2="48" y2="92" stroke="#c8c8c8" stroke-width="1.8" stroke-linecap="round"/>
+        <!-- Whiskers right -->
+        <line x1="112" y1="80" x2="72" y2="84" stroke="#c8c8c8" stroke-width="1.8" stroke-linecap="round"/>
+        <line x1="112" y1="88" x2="72" y2="88" stroke="#c8c8c8" stroke-width="1.8" stroke-linecap="round"/>
+        <line x1="112" y1="96" x2="72" y2="92" stroke="#c8c8c8" stroke-width="1.8" stroke-linecap="round"/>
       </svg>
     </div>
 
@@ -804,7 +829,7 @@ function itemCard(item) {
     ? `<img class="item-thumb" src="${escHtml(item.photo)}" alt="${escHtml(item.name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" /><div class="item-thumb-placeholder" style="display:none;">👗</div>`
     : `<div class="item-thumb-placeholder">👗</div>`;
 
-  const descHtml = item.description ? `<div style="font-size:12px;color:#c0004a;opacity:0.7;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;">${escHtml(item.description)}</div>` : '';
+  const descHtml = item.description ? `<div style="font-size:12px;color:#e0509a;opacity:0.7;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;">${escHtml(item.description)}</div>` : '';
   return `
     <div class="item-card" onclick="openDetail(${item.id})" style="cursor:pointer;position:relative;">
       ${imgHtml}
