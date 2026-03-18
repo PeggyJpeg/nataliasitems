@@ -343,6 +343,120 @@
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #f0abfc; border-radius: 2px; }
+
+    /* ─── DETAIL BOTTOM SHEET ─────────────────────────────────── */
+    #detail-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(0,0,0,0.35);
+      justify-content: flex-end;
+      align-items: flex-end;
+      flex-direction: column;
+    }
+    #detail-overlay.open { display: flex; }
+    #detail-sheet {
+      background: white;
+      border-radius: 20px 20px 0 0;
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      max-height: 92vh;
+      overflow-y: auto;
+      box-shadow: 0 -4px 24px rgba(168,85,247,0.25);
+      border-top: 2px solid #f9a8d4;
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+      -webkit-overflow-scrolling: touch;
+    }
+    #detail-overlay.open #detail-sheet { transform: translateY(0); }
+    .sheet-handle {
+      width: 40px; height: 5px;
+      background: #e0c4f4;
+      border-radius: 3px;
+      margin: 10px auto 4px;
+    }
+    .sheet-close {
+      position: absolute; top: 10px; right: 14px;
+      background: none; border: none;
+      font-size: 22px; color: #c084fc;
+      cursor: pointer; padding: 4px 8px;
+      line-height: 1;
+    }
+    .sheet-photo-wrap {
+      width: 100%; max-height: 320px;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #fdf2f8, #ede9fe);
+      overflow: hidden; position: relative;
+    }
+    .sheet-photo-wrap img {
+      width: 100%; max-height: 320px;
+      object-fit: contain;
+    }
+    .sheet-photo-placeholder {
+      font-size: 64px; padding: 48px 0;
+    }
+    .sheet-body { padding: 16px 20px 32px; position: relative; }
+    .sheet-body .modal-label { margin-top: 8px; }
+    .sheet-photo-actions {
+      display: flex; gap: 8px; margin-bottom: 10px;
+    }
+    .sheet-photo-actions label,
+    .sheet-photo-actions button {
+      flex: 1;
+      text-align: center;
+      background: linear-gradient(135deg, #fdf2f8, #faf5ff);
+      border: 1.5px solid #f0abfc;
+      border-radius: 10px;
+      padding: 10px 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #9333ea;
+      cursor: pointer;
+      min-height: 44px;
+      display: flex; align-items: center; justify-content: center; gap: 4px;
+    }
+    .btn-status-toggle {
+      width: 100%;
+      border: none; border-radius: 10px;
+      padding: 14px; font-size: 15px; font-weight: 700;
+      cursor: pointer; min-height: 44px;
+      margin-bottom: 10px;
+    }
+    .btn-status-toggle.is-in {
+      background: linear-gradient(to right, #f9a8d4, #e9d5ff);
+      color: #7e22ce;
+    }
+    .btn-status-toggle.is-out {
+      background: linear-gradient(to right, #c084fc, #ec4899);
+      color: white;
+    }
+    .btn-delete-item {
+      width: 100%;
+      background: white;
+      color: #e11d48;
+      border: 1.5px solid #fda4af;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      min-height: 44px;
+      margin-bottom: 10px;
+    }
+    .btn-save-item {
+      width: 100%;
+      background: linear-gradient(to right, #ec4899, #a855f7);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      min-height: 44px;
+    }
   </style>
 </head>
 <body>
@@ -400,6 +514,38 @@
 
 <!-- FAB -->
 <button id="fab" onclick="openModal()" title="Add item">+</button>
+
+<!-- DETAIL / EDIT BOTTOM SHEET -->
+<div id="detail-overlay" onclick="closeDetailOnBg(event)">
+  <div id="detail-sheet">
+    <div class="sheet-handle"></div>
+    <button class="sheet-close" onclick="closeDetail()">✕</button>
+    <div class="sheet-photo-wrap">
+      <img id="detail-photo" src="" alt="" style="display:none;" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" />
+      <div id="detail-photo-placeholder" class="sheet-photo-placeholder">👗</div>
+    </div>
+    <div class="sheet-body">
+      <div class="sheet-photo-actions">
+        <label>📸 Upload Photo
+          <input type="file" id="detail-file-input" accept="image/*" capture="environment" style="display:none;" onchange="handleDetailFileUpload(event)" />
+        </label>
+        <button type="button" onclick="togglePhotoUrlInput()">🔗 Photo URL</button>
+      </div>
+      <div id="detail-url-row" style="display:none; margin-bottom:10px;">
+        <input type="url" id="detail-photo-url" class="modal-input" placeholder="https://example.com/photo.jpg" />
+      </div>
+      <label class="modal-label">Name</label>
+      <input type="text" id="detail-name" class="modal-input" placeholder="Item name" />
+      <label class="modal-label">Description</label>
+      <textarea id="detail-desc" class="modal-input" placeholder="Optional description..." rows="2" style="resize:vertical;font-family:inherit;"></textarea>
+      <div style="margin-top:12px;">
+        <button id="detail-status-btn" class="btn-status-toggle is-in" onclick="toggleDetailStatus()">🏠 At House</button>
+        <button class="btn-save-item" onclick="saveDetail()">💾 Save Changes</button>
+        <button class="btn-delete-item" onclick="deleteDetailItem()">🗑️ Delete Item</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ADD ITEM MODAL -->
 <div id="modal-overlay" onclick="closeModalOnBg(event)">
@@ -555,17 +701,19 @@ function itemCard(item) {
     ? `<span class="pill-in">🏠 At house</span>`
     : `<span class="pill-out">📦 Checked out</span>`;
   const btnHtml = isIn
-    ? `<button class="btn-checkout" onclick="toggleStatus(${item.id})">📦 Check out</button>`
-    : `<button class="btn-home"     onclick="toggleStatus(${item.id})">🏠 Mark home</button>`;
+    ? `<button class="btn-checkout" onclick="event.stopPropagation();toggleStatus(${item.id})">📦 Check out</button>`
+    : `<button class="btn-home"     onclick="event.stopPropagation();toggleStatus(${item.id})">🏠 Mark home</button>`;
   const imgHtml = item.photo
     ? `<img class="item-thumb" src="${escHtml(item.photo)}" alt="${escHtml(item.name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" /><div class="item-thumb-placeholder" style="display:none;">👗</div>`
     : `<div class="item-thumb-placeholder">👗</div>`;
 
+  const descHtml = item.description ? `<div style="font-size:12px;color:#9ca3af;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;">${escHtml(item.description)}</div>` : '';
   return `
-    <div class="item-card">
+    <div class="item-card" onclick="openDetail(${item.id})" style="cursor:pointer;">
       ${imgHtml}
       <div class="item-info">
         <div class="item-name">${escHtml(item.name)}</div>
+        ${descHtml}
         ${pillHtml}
       </div>
       <div style="flex-shrink:0;">
@@ -639,6 +787,119 @@ function addItem() {
   closeModal();
   setTab('all');
   renderItems();
+}
+
+// ─── DETAIL BOTTOM SHEET ────────────────────────────────────────────────────
+let detailItemId = null;
+let detailStatus = 'IN';
+let detailPhotoData = '';
+
+function openDetail(id) {
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+  detailItemId = id;
+  detailStatus = item.status;
+  detailPhotoData = '';
+
+  document.getElementById('detail-name').value = item.name || '';
+  document.getElementById('detail-desc').value = item.description || '';
+  document.getElementById('detail-photo-url').value = item.photo || '';
+  document.getElementById('detail-url-row').style.display = 'none';
+  document.getElementById('detail-file-input').value = '';
+
+  updateDetailPhoto(item.photo);
+  updateDetailStatusBtn();
+
+  document.getElementById('detail-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('detail-name').focus(), 200);
+}
+
+function closeDetail() {
+  document.getElementById('detail-overlay').classList.remove('open');
+  detailItemId = null;
+}
+
+function closeDetailOnBg(e) {
+  if (e.target === document.getElementById('detail-overlay')) closeDetail();
+}
+
+function updateDetailPhoto(src) {
+  const img = document.getElementById('detail-photo');
+  const ph = document.getElementById('detail-photo-placeholder');
+  if (src) {
+    img.src = src;
+    img.style.display = 'block';
+    ph.style.display = 'none';
+  } else {
+    img.style.display = 'none';
+    ph.style.display = 'block';
+  }
+}
+
+function updateDetailStatusBtn() {
+  const btn = document.getElementById('detail-status-btn');
+  if (detailStatus === 'IN') {
+    btn.className = 'btn-status-toggle is-in';
+    btn.textContent = '🏠 At House — tap to check out';
+  } else {
+    btn.className = 'btn-status-toggle is-out';
+    btn.textContent = '📦 Checked Out — tap to mark home';
+  }
+}
+
+function toggleDetailStatus() {
+  detailStatus = detailStatus === 'IN' ? 'OUT' : 'IN';
+  updateDetailStatusBtn();
+}
+
+function togglePhotoUrlInput() {
+  const row = document.getElementById('detail-url-row');
+  row.style.display = row.style.display === 'none' ? 'block' : 'none';
+  if (row.style.display === 'block') {
+    document.getElementById('detail-photo-url').focus();
+  }
+}
+
+function handleDetailFileUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    detailPhotoData = ev.target.result;
+    updateDetailPhoto(detailPhotoData);
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveDetail() {
+  const item = items.find(i => i.id === detailItemId);
+  if (!item) return;
+  const name = document.getElementById('detail-name').value.trim();
+  if (!name) { document.getElementById('detail-name').focus(); return; }
+
+  item.name = name;
+  item.description = document.getElementById('detail-desc').value.trim();
+  item.status = detailStatus;
+
+  // Photo priority: uploaded file > URL input > keep existing
+  if (detailPhotoData) {
+    item.photo = detailPhotoData;
+  } else {
+    const urlVal = document.getElementById('detail-photo-url').value.trim();
+    if (urlVal) item.photo = urlVal;
+  }
+
+  saveState();
+  renderItems();
+  closeDetail();
+}
+
+function deleteDetailItem() {
+  if (!confirm('Delete this item? This cannot be undone.')) return;
+  items = items.filter(i => i.id !== detailItemId);
+  saveState();
+  renderItems();
+  closeDetail();
 }
 
 // ─── INIT ───────────────────────────────────────────────────────────────────
