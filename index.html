@@ -94,8 +94,8 @@
     }
 
     .item-thumb {
-      width: 72px;
-      height: 72px;
+      width: 56px;
+      height: 56px;
       border-radius: 10px;
       object-fit: cover;
       border: 1.5px solid #f9a8d4;
@@ -103,8 +103,8 @@
       background: #fdf2f8;
     }
     .item-thumb-placeholder {
-      width: 72px;
-      height: 72px;
+      width: 56px;
+      height: 56px;
       border-radius: 10px;
       border: 1.5px solid #f9a8d4;
       background: linear-gradient(135deg, #fce7f3, #ede9fe);
@@ -115,7 +115,7 @@
       font-size: 24px;
     }
 
-    .item-info { flex: 1; min-width: 0; }
+    .item-info { flex: 1; min-width: 0; overflow: hidden; }
     .item-name {
       font-weight: 700;
       font-size: 15px;
@@ -703,8 +703,8 @@ function itemCard(item) {
     ? `<span class="pill-in">🏠 At house</span>`
     : `<span class="pill-out">📦 Checked out</span>`;
   const btnHtml = isIn
-    ? `<button class="btn-checkout" onclick="event.stopPropagation();toggleStatus(${item.id})">📦 Check out</button>`
-    : `<button class="btn-home"     onclick="event.stopPropagation();toggleStatus(${item.id})">🏠 Mark home</button>`;
+    ? `<button class="btn-checkout" onclick="event.stopPropagation();toggleStatus(${item.id})">📦 Out</button>`
+    : `<button class="btn-home"     onclick="event.stopPropagation();toggleStatus(${item.id})">🏠 Home</button>`;
   const imgHtml = item.photo
     ? `<img class="item-thumb" src="${escHtml(item.photo)}" alt="${escHtml(item.name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" /><div class="item-thumb-placeholder" style="display:none;">👗</div>`
     : `<div class="item-thumb-placeholder">👗</div>`;
