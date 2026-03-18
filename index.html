@@ -207,14 +207,31 @@
       background: white;
       border: 1.5px solid #f9a8d4;
       border-radius: 12px;
-      padding: 12px 16px;
+      padding: 12px 36px 12px 16px;
       font-size: 14px;
       color: #7e22ce;
       font-style: italic;
       box-shadow: 0 2px 8px rgba(236,72,153,0.1);
       margin-top: 8px;
       display: none;
+      position: relative;
     }
+    #fun-message-close {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      color: #c084fc;
+      line-height: 1;
+      padding: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #fun-message-close:hover { color: #9333ea; }
 
     /* FAB */
     #fab {
@@ -492,7 +509,10 @@
     </div>
 
     <!-- Fun message -->
-    <div id="fun-message"></div>
+    <div id="fun-message">
+      <button id="fun-message-close" onclick="document.getElementById('fun-message').style.display='none'" title="Dismiss">✕</button>
+      <span id="fun-message-text"></span>
+    </div>
 
     <!-- Filter tabs -->
     <div style="display:flex; gap:8px; margin-bottom:10px; margin-top:6px;">
@@ -759,7 +779,7 @@ function showFun(type) {
   const msg = document.getElementById('fun-message');
   const idx = funCycles[type] % arr.length;
   funCycles[type]++;
-  msg.textContent = arr[idx];
+  document.getElementById('fun-message-text').textContent = arr[idx];
   msg.style.display = 'block';
 }
 
