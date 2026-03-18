@@ -202,8 +202,15 @@
     .btn-joke    { background: linear-gradient(to right, #a855f7, #c084fc); color: white; }
     .btn-fact    { background: linear-gradient(to right, #8b5cf6, #7c3aed); color: white; }
 
-    /* Welcome message */
+    /* Welcome message — fixed toast, doesn't shift layout */
     #welcome-message {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 48px);
+      max-width: 420px;
+      z-index: 300;
       background: linear-gradient(135deg, #fff0f8, #fdf4ff);
       border: 1.5px solid #f9a8d4;
       border-radius: 14px;
@@ -212,11 +219,9 @@
       color: #be185d;
       font-style: italic;
       font-weight: 600;
-      box-shadow: 0 3px 12px rgba(236,72,153,0.15);
-      margin: 12px 24px 0;
-      position: relative;
+      box-shadow: 0 6px 24px rgba(236,72,153,0.25);
       opacity: 1;
-      transition: opacity 0.8s ease;
+      transition: opacity 2s ease;
     }
     #welcome-message.fading { opacity: 0; }
     #welcome-message.hidden { display: none; }
@@ -954,21 +959,21 @@ function deleteDetailItem() {
 
 // ─── WELCOME MESSAGE ────────────────────────────────────────────────────────
 const WELCOME_MESSAGES = [
-  "Hi Natalia 🌸 You're literally the prettiest person who has ever tracked their clothes.",
-  "Welcome back, babe 💜 Somehow even your laundry list is cute.",
-  "Hey gorgeous 🌷 Missing any items? (Spoiler: not your personality, it's perfect.)",
-  "Hi Natalia ✨ Just a reminder that you're absolutely radiant today.",
-  "Welcome back 💕 You make keeping track of clothes look effortlessly chic.",
+  "Hi baby 🌸 You're literally the prettiest person who has ever tracked their clothes.",
+  "Welcome back, sweetheart 💜 Somehow even your laundry list is cute.",
+  "Hey gorgeous 🌷 Missing any items? (Spoiler: not your vibe, it's perfect.)",
+  "Hi love ✨ Just a reminder that you're absolutely radiant today.",
+  "Welcome back, baby 💕 You make keeping track of clothes look effortlessly chic.",
   "Hey you 🌺 The fact that you made an app for this? That's main character energy.",
-  "Hi Natalia 💖 Your closet is lucky to have you. Tbh so is everyone around you.",
-  "Welcome, queen 👑 Hope your day is as lovely as you are.",
-  "Hey Natalia 🌸 Checking in on your items? You're so organized it's almost unfair.",
-  "Hi beautiful 💜 Your fit today? Probably immaculate. As always.",
-  "Welcome back 🌷 Reminder: you're the most stylish person this app has ever seen.",
-  "Hey Natalia ✨ You walk into rooms and literally improve the vibe. Just so you know.",
-  "Hi 💕 Not to be dramatic, but this app is better just because you're using it.",
-  "Welcome back, superstar 🌟 Your style, your warmth, your everything — unmatched.",
-  "Hey Natalia 🩷 Just popping in to say you're seriously one of a kind.",
+  "Hi sweetheart 💖 Your closet is lucky to have you. Tbh so is everyone around you.",
+  "Welcome, my love 👑 Hope your day is as lovely as you are.",
+  "Hey baby 🌸 Checking in on your items? You're so organized it's almost unfair.",
+  "Hi gorgeous 💜 Your fit today? Probably immaculate. As always.",
+  "Welcome back, love 🌷 Reminder: you're the most stylish person this app has ever seen.",
+  "Hey sweetheart ✨ You walk into rooms and literally improve the vibe. Just so you know.",
+  "Hi baby 💕 Not to be dramatic, but this app is better just because you're using it.",
+  "Welcome back, my love 🌟 Your style, your warmth, your everything — unmatched.",
+  "Hey gorgeous 🩷 Just popping in to say you're seriously one of a kind.",
 ];
 
 let welcomeTimer = null;
@@ -982,7 +987,7 @@ function showWelcome() {
 
   welcomeTimer = setTimeout(() => {
     el.classList.add('fading');
-    setTimeout(() => el.classList.add('hidden'), 800);
+    setTimeout(() => el.classList.add('hidden'), 2000);
   }, 4000);
 }
 
@@ -990,7 +995,7 @@ function dismissWelcome() {
   clearTimeout(welcomeTimer);
   const el = document.getElementById('welcome-message');
   el.classList.add('fading');
-  setTimeout(() => el.classList.add('hidden'), 800);
+  setTimeout(() => el.classList.add('hidden'), 2000);
 }
 
 // ─── INIT ───────────────────────────────────────────────────────────────────
